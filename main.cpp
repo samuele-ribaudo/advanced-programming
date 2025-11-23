@@ -117,10 +117,11 @@ int main(int argc, char* argv[])
                         int x_neighbour = x + x_off;
                         int y_neighbour = y + y_off;
 
-                        // check wether the cell is at the edge
-                        // if (x_neighbour < 0 || x_neighbour >= gridSizeX || y_neighbour < 0 || y_neighbour >= gridSizeY)
-                        //     continue;
+                        // skip if the cell is at the edge
+                        if (x_neighbour < 0 || x_neighbour >= gridSizeX || y_neighbour < 0 || y_neighbour >= gridSizeY)
+                             continue;
 
+                        /*
                         // Loop at edge
                         if (x_neighbour < 0)
                             x_neighbour = gridSizeX - 1;
@@ -130,6 +131,7 @@ int main(int argc, char* argv[])
                             y_neighbour = gridSizeY - 1;
                         if (y_neighbour >= gridSizeY)
                             y_neighbour = 0;
+                        */
 
                         if (grid[x_neighbour][y_neighbour].isAlive)
                             aliveNeighbours += 1;
@@ -144,15 +146,19 @@ int main(int argc, char* argv[])
 
                 if (grid[x][y].isAlive)
                 {
-                    if (aliveNeighbours < 2)
+                    if (aliveNeighbours == 2 || aliveNeighbours == 3) {
+                        grid[x][y].nextState = true;
+                    }
+                    else {
                         grid[x][y].nextState = false;
-                    if (aliveNeighbours > 3)
-                        grid[x][y].nextState = false;
+                    }
                 }
                 else
                 {
                     if (aliveNeighbours == 3)
                         grid[x][y].nextState = true;
+                    else
+                        grid[x][y].nextState = false;
                 }
             }
         }

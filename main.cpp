@@ -10,6 +10,7 @@
 using std::cin;
 using std::cout;
 using std::string;
+using std::atoi;
 
 class Cell
 {
@@ -20,12 +21,37 @@ public:
 
 void DrawLine(int l);
 
-int main()
+int main(int argc, char* argv[])
 {
     srand(time(0));
 
-    int gridSizeX = 80;
-    int gridSizeY = 20;
+    int max_step, gridSizeX, gridSizeY;
+
+    switch (argc)
+    {
+        case(1):
+        {
+            max_step = 300;
+            gridSizeX = 80;
+            gridSizeY = 20;
+            break;
+        }
+        case(2):
+        {
+            max_step = std::atoi(argv[1]);
+            gridSizeX = 80;
+            gridSizeY = 20;
+            break;
+        }
+        case(4):
+        {
+            max_step = std::atoi(argv[1]);
+            gridSizeX = std::atoi(argv[2]);
+            gridSizeY = std::atoi(argv[3]);
+            break;
+        }
+    }
+
 
     // create grid with random alive cells
     Cell grid[gridSizeX][gridSizeY];
@@ -45,7 +71,7 @@ int main()
 
     // Sim loop
     int loop = 0;
-    while (loop < 10000)
+    while (loop < max_step)
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
@@ -61,7 +87,7 @@ int main()
             {
                 if (grid[x][y].isAlive)
                 {
-                    cout << "█";
+                    cout << "X";
                 }
                 else
                 {

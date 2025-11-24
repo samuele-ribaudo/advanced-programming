@@ -11,6 +11,7 @@
 
 using std::cin;
 using std::cout;
+using std::endl;
 using std::string;
 using std::atoi;
 
@@ -28,7 +29,7 @@ parameters for execution:
 - None -> creates random 80x20 grid with 20% probability of alive cells, runs 30 time steps
 - 1 parameter: no. time steps -> creates random 80x20 grid with 20% probability of alive cells,
                                  uns given no. of time steps
-- 2 parameter: no. time steps, filename -> opens given file, that has grid size seperated and followed by some spacing, followed by
+- 2 parameter: no. time steps, filename -> opens given file, that has grid size seperated and followed by line breaks, followed by
                                  representation of alive ('1') and dead (any "non-space" char) cells, all endl and spacings are ignored,
                                  if not enough cells are defined, the grid is filled with dead cellc,
                                  runs given no. of time steps
@@ -55,16 +56,16 @@ int main(int argc, char* argv[])
         }
         case(2):
         {
-            max_step = std::atoi(argv[1]);
+            max_step = atoi(argv[1]);
             gridSizeX = 80;
             gridSizeY = 20;
             break;
         }
         case(3):
         {
-            max_step = std::atoi(argv[1]);
+            max_step = atoi(argv[1]);
             patternFile.open(argv[2]);
-            std::string sizeStr;
+            string sizeStr;
             patternFile >> sizeStr;
             gridSizeX = std::stoi(sizeStr);
             patternFile >> sizeStr;
@@ -74,9 +75,9 @@ int main(int argc, char* argv[])
         }
         case(4):
         {
-            max_step = std::atoi(argv[1]);
-            gridSizeX = std::atoi(argv[2]);
-            gridSizeY = std::atoi(argv[3]);
+            max_step = atoi(argv[1]);
+            gridSizeX = atoi(argv[2]);
+            gridSizeY = atoi(argv[3]);
             break;
         }
     }
@@ -137,11 +138,13 @@ int main(int argc, char* argv[])
                     cout << " ";
                 }
             }
-            cout << '\n';
+            cout << endl;
         }
         DrawLine(gridSizeX);
         cout << "Iteration: " << step << " / " << max_step << "\n";
 
+        if (step == max_step)
+            break;
         // calculate next state
         for (int y = 0; y < gridSizeY; y++)
         {
@@ -215,7 +218,31 @@ int main(int argc, char* argv[])
             }
         }
     }
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    string saveFinalConstellation;
+    cout << "Save final constellation? (Y/N): ";
+    cin >> saveFinalConstellation;
+    if (saveFinalConstellation == "Y") {
+        cout << "Enter filename: ";
+        cin >> saveFinalConstellation;
+        std::ofstream outFile (saveFinalConstellation);
+        outFile << gridSizeX << endl << gridSizeY << endl;
+        for (int y = 0; y < gridSizeY; y++)
+        {
+            for (int x = 0; x < gridSizeX; x++)
+            {
+                if (grid[x][y].isAlive)
+                {
+                    outFile << "1";
+                }
+                else
+                {
+                    outFile << "0";
+                }
+            }
+            outFile << endl;
+        }
+
+    }
     return 0;
 }
 

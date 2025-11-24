@@ -24,63 +24,74 @@ public:
 
 void DrawLine(int l);
 
-/*
-parameters for execution:
-- None -> creates random 80x20 grid with 20% probability of alive cells, runs 30 time steps
-- 1 parameter: no. time steps -> creates random 80x20 grid with 20% probability of alive cells,
-                                 uns given no. of time steps
-- 2 parameter: no. time steps, filename -> opens given file, that has grid size seperated and followed by line breaks, followed by
-                                 representation of alive ('1') and dead (any "non-space" char) cells, all endl and spacings are ignored,
-                                 if not enough cells are defined, the grid is filled with dead cellc,
-                                 runs given no. of time steps
-- 3 parameters: no. time steps, grideSizeX, gridSizeY ->
-                                 creates random grideSizeX x gridSizeY grid with 20% probability of alive cells,
-                                 runs given no. time steps
-*/
-int main(int argc, char* argv[])
-{
-    srand(time(0));
+int printIntroduction(){
+    // Print introduction message ad returns:
+    //      0 if the user wants to initialize a random grid
+    //      1 if the user wants to load a grid from a file
 
-    int max_step, gridSizeX, gridSizeY;
-    bool isFileInput = false;
+    char option;
+
+    system("clear");
+    cout << "=====================" << endl;
+    cout << "Conway's Game of Life" << endl;
+    cout << "=====================" << endl;
+    cout << "a) initialize random grid" << endl;
+    cout << "b) load grid from file" << endl;
+    cout << "Choose option (a/b): ";
+    cin >> option;
+
+    while(option != 'a' && option != 'b')
+    {
+        cout << "Invalid option! Choose option (a/b): ";
+        cin >> option;
+    }
+
+    return option == 'a' ? 0 : 1;
+}
+
+
+int main()
+{
+    srand(time(NULL));
+
+    int max_step = 30;
+    int gridSizeX = 80;
+    int gridSizeY = 20;
+    bool isFileInput;
     std::ifstream patternFile;
 
-    switch (argc)
-    {
-        case(1):
+    if(printIntroduction()){
+        // load from file
+
+        isFileInput = true;
+        cout << "Enter filename: ";
+        string filename;
+        cin >> filename;
+        patternFile.open(filename);
+        if (!patternFile.is_open() || !patternFile.good())
         {
-            max_step = 30;
-            gridSizeX = 80;
-            gridSizeY = 20;
-            break;
+            cout << "Error opening file! Exiting..." << endl;
+            return 1;
         }
-        case(2):
-        {
-            max_step = atoi(argv[1]);
-            gridSizeX = 80;
-            gridSizeY = 20;
-            break;
-        }
-        case(3):
-        {
-            max_step = atoi(argv[1]);
-            patternFile.open(argv[2]);
-            string sizeStr;
-            patternFile >> sizeStr;
-            gridSizeX = std::stoi(sizeStr);
-            patternFile >> sizeStr;
-            gridSizeY = std::stoi(sizeStr);
-            isFileInput = true;
-            break;
-        }
-        case(4):
-        {
-            max_step = atoi(argv[1]);
-            gridSizeX = atoi(argv[2]);
-            gridSizeY = atoi(argv[3]);
-            break;
-        }
+
+        string sizeStr;
+        patternFile >> sizeStr;
+        gridSizeX = std::stoi(sizeStr);
+        patternFile >> sizeStr;
+        gridSizeY = std::stoi(sizeStr);
+
+    }else{
+        // random initialization
+
+        isFileInput = false;
+        cout << "Entez grid size X (ex. 80): ";
+        cin >> gridSizeX;
+        cout << "Entez grid size Y (ex. 20): ";
+        cin >> gridSizeY;
     }
+
+    cout << "Enter number of time steps (ex. 30): ";
+    cin >> max_step;
 
 
     // create grid with random alive cells

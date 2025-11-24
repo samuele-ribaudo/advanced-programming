@@ -7,7 +7,7 @@
 ## Sprint 1: Minimal Viable Implementation
 
 - [x] Minimal viable implementation of Conway's Game of Life (random initial arrangement, fixed grid size).
-- [ ] Enable reading a simple text file (0 = dead, 1 = alive) to initialize the grid.
+- [x] Enable reading a simple text file (0 = dead, 1 = alive) to initialize the grid.
 - [ ] Save the final grid configuration in the same text format.
 - [ ] Allow selection of initialization method (random, file, size) via console input or execution parameters.
 - [ ] Allow saving of final configuration output via console input or execution parameters.

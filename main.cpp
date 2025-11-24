@@ -1,6 +1,8 @@
 // use SDL2 or raylib to render the game
 #include <iostream>
+#include <fstream>
 #include <cstdlib>
+#include <cctype>
 #include <ctime>
 #include <stdlib.h>
 
@@ -21,17 +23,32 @@ public:
 
 void DrawLine(int l);
 
+/*
+parameters for execution:
+- None -> creates random 80x20 grid with 20% probability of alive cells, runs 30 time steps
+- 1 parameter: no. time steps -> creates random 80x20 grid with 20% probability of alive cells,
+                                 uns given no. of time steps
+- 2 parameter: no. time steps, filename -> opens given file, that has grid size seperated and followed by some spacing, followed by
+                                 representation of alive ('1') and dead (any "non-space" char) cells, all endl and spacings are ignored,
+                                 if not enough cells are defined, the grid is filled with dead cellc,
+                                 runs given no. of time steps
+- 3 parameters: no. time steps, grideSizeX, gridSizeY ->
+                                 creates random grideSizeX x gridSizeY grid with 20% probability of alive cells,
+                                 runs given no. time steps
+*/
 int main(int argc, char* argv[])
 {
     srand(time(0));
 
     int max_step, gridSizeX, gridSizeY;
+    bool isFileInput = false;
+    std::ifstream patternFile;
 
     switch (argc)
     {
         case(1):
         {
-            max_step = 300;
+            max_step = 30;
             gridSizeX = 80;
             gridSizeY = 20;
             break;
@@ -41,6 +58,18 @@ int main(int argc, char* argv[])
             max_step = std::atoi(argv[1]);
             gridSizeX = 80;
             gridSizeY = 20;
+            break;
+        }
+        case(3):
+        {
+            max_step = std::atoi(argv[1]);
+            patternFile.open(argv[2]);
+            std::string sizeStr;
+            patternFile >> sizeStr;
+            gridSizeX = std::stoi(sizeStr);
+            patternFile >> sizeStr;
+            gridSizeY = std::stoi(sizeStr);
+            isFileInput = true;
             break;
         }
         case(4):
@@ -61,21 +90,35 @@ int main(int argc, char* argv[])
         {
             grid[x][y].nextState = false;
 
-            int randNum = rand() % 100;
-            if (randNum < 20)
-                grid[x][y].isAlive = true;
+            if (isFileInput)
+            {
+                if ( patternFile.is_open() && patternFile.good())
+                {
+                    char c;
+                    do {
+                        c = patternFile.get();
+                    } while (std::isspace(static_cast<unsigned char>(c)) && patternFile.good());
+                    grid[x][y].isAlive = c == '1';
+                }
+                else
+                {
+                    grid[x][y].isAlive = false;
+                }
+            }
             else
-                grid[x][y].isAlive = false;
+            {
+                int randNum = rand() % 100;
+                grid[x][y].isAlive = randNum < 20;
+            }
         }
     }
+    if (isFileInput && patternFile)
+        patternFile.close();
 
     // Sim loop
-    int loop = 0;
-    while (loop < max_step)
+    for (int step = 0; step <= max_step; step++)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(50));
-
-        loop++;
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
         // print grid
         system("clear");
@@ -97,14 +140,14 @@ int main(int argc, char* argv[])
             cout << '\n';
         }
         DrawLine(gridSizeX);
-        cout << "Iteration: " << loop << '\n';
+        cout << "Iteration: " << step << " / " << max_step << "\n";
 
         // calculate next state
         for (int y = 0; y < gridSizeY; y++)
         {
             for (int x = 0; x < gridSizeX; x++)
             {
-                // check wether neighbors are alive
+                // count the neighbors that are alive
                 int aliveNeighbours = 0;
                 for (int x_off = -1; x_off < 2; x_off++)
                 {
@@ -172,6 +215,7 @@ int main(int argc, char* argv[])
             }
         }
     }
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     return 0;
 }
 

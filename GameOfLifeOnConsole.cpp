@@ -131,7 +131,7 @@ int main(int argc, char* argv[])
             {
                 if (grid[x][y].isAlive)
                 {
-                    cout << "X";
+                    cout << "█";
                 }
                 else
                 {

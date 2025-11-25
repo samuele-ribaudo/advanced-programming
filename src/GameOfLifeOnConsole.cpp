@@ -235,6 +235,7 @@ int main()
     if (saveFinalConstellation == "Y") {
         cout << "Enter filename: ";
         cin >> saveFinalConstellation;
+        if(saveFinalConstellation.find(".txt") == string::npos) saveFinalConstellation += ".txt";
         std::ofstream outFile (saveFinalConstellation);
         outFile << gridSizeX << endl << gridSizeY << endl;
         for (int y = 0; y < gridSizeY; y++)

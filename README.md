@@ -1,5 +1,6 @@
 ## Project structure
 
+```
 89
 ├── CMakeLists.txt
 ├── README.md
@@ -18,6 +19,7 @@
 │    └── game_tests.cpp
 ├── build
 └── external
+```
 
 The project is organized as follows:
 - `docs/`: Contains project documentation, instructions, and explanations.

@@ -3,7 +3,20 @@
 Idea contributed by [Ludwig Kratzl](ludwig.kratzl@tum.de).
 
 
-## Build and Run
+## Project structure
+
+The project is organized as follows:
+- `src/`: Contains the source code files implementing the core functionality of the Game of Life simulation.
+- `include/`: Contains header files declaring classes and functions used throughout the project.
+- `tests/`: Contains unit tests and test cases to verify the correctness of the implementation.
+- `build/`: The directory where build files and compiled binaries are generated.
+- `img01.png`: Example image of a grid used in the documentation.
+- `gameoflife.md`: This markdown file containing project documentation, instructions, and explanations.
+- `CMakeLists.txt`: The CMake configuration file used to build the project and manage dependencies.
+- `README.md`: A general overview and introduction to the project
+
+
+## Build and Run (macOS or Linux)
 
 To build and run the project on macOS or Linux, please follow these steps in your terminal:
 
@@ -45,6 +58,7 @@ cmake --build .
 
 These instructions assume the project is configured to include Google Test as a submodule and that CMakeLists.txt is properly set up to build both the main application and the tests.
 
+
 ## Motivation
 [Conway's Game Of Life](https://de.wikipedia.org/wiki/Conways_Spiel_des_Lebens) is an easy realization of a cellular automaton, which models dynamic but discrete systems. 
 In this project, we create a simulation that realizes such systems.
@@ -83,6 +97,7 @@ In this sprint, we want to create a first prototype that simulates the system. T
 * Basic test cases are implemented to verify that the simulation works as expected (some grids found on [wikipedia](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life#Examples_of_patterns) can be used)
 * (optional) Unit tests are implemented (preferably using a testing library like [gtest](https://github.com/google/googletest) )
 
+
 ## Sprint 2
 In this sprint, we want to create an interactive simulation and add more dynamics to the system. The program should also be refactored into classes to facilitate more complex behaviour and multiple simulations.
 
@@ -96,6 +111,7 @@ In this sprint, we want to create an interactive simulation and add more dynamic
 * The program does not exit after the last time step 
 * The simulation is extended to an infinite grid: if a boundary of the grid is reached, additional rows/columns are added
 * (optional) The simulation is animated in the terminal window (this can be done by clearing the terminal and adding delays between simulation steps)
+
 
 ## Sprint 3
 In this sprint, we want to extend the simulation to an infinite grid. This should be done in an efficient way to optimize performance, STL containers or custom data structures may be used.

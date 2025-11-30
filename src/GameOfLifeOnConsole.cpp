@@ -92,22 +92,16 @@ void printBoard(const std::vector<std::vector<Cell>> &grid){
 // Parameters:
 //   - gridSizeX: reference to int to store grid width.
 //   - gridSizeY: reference to int to store grid height.
+//   - filename: string filename to load grid from
 // Returns: 2D vector of Cells initialized from the file.
 // ======================================================
-std::vector<std::vector<Cell>> initializeGridFromFile(int &gridSizeX, int &gridSizeY){
+std::vector<std::vector<Cell>> initializeGridFromFile(int &gridSizeX, int &gridSizeY, const std::string &filename){
     
-    std::ifstream patternFile;
-    string filename;
+    std::ifstream patternFile(filename);
 
-    while(true){
-        cout << "Enter filename: ";
-        cin >> filename;
-        patternFile.open(filename);
-
-        if(patternFile.is_open() && patternFile.good()) break;
-
-        cout << "Error opening file! Try again..." << endl;
-        patternFile.clear();
+    while(!patternFile.is_open() || !patternFile.good()){
+        cout << "Error opening file: " << filename << endl;
+        return std::vector<std::vector<Cell>>(); // return empty grid on error
     }
 
     string sizeStr;
@@ -137,23 +131,19 @@ std::vector<std::vector<Cell>> initializeGridFromFile(int &gridSizeX, int &gridS
 // ================================================================================
 // Initializes the grid randomly with a given probability of alive cells.
 // Parameters:
-//   - gridSizeX: reference to int to store grid width.
-//   - gridSizeY: reference to int to store grid height.
+//   - gridSizeX: grid width.
+//   - gridSizeY: grid height.
 //   - p: integer percentage probability (0-100) that a cell is alive (default 20).
 // Returns: 2D vector of Cells initialized randomly.
 // ================================================================================
-std::vector<std::vector<Cell>> initializeGridRandom(int &gridSizeX, int &gridSizeY, int p = 20) {
-    if(p < 0 || p > 100) p = 20;
-
-    cout << "Enter grid size X (ex. 80): ";
-    cin >> gridSizeX;
-    cout << "Enter grid size Y (ex. 20): ";
-    cin >> gridSizeY;
+std::vector<std::vector<Cell>> initializeGridRandom(int gridSizeX, int gridSizeY, int p = 20){
+    
+    if(p < 0 || p > 100) p = 20; // default probability if out of range
 
     std::vector<std::vector<Cell>> grid(gridSizeX, std::vector<Cell>(gridSizeY));
 
-    for (int y = 0; y < gridSizeY; y++) {
-        for (int x = 0; x < gridSizeX; x++) {
+    for (int y = 0; y < gridSizeY; y++){
+        for (int x = 0; x < gridSizeX; x++){
             int randNum = rand() % 100;
             grid[x][y].isAlive = (randNum < p);
             grid[x][y].nextState = false;
@@ -290,9 +280,20 @@ int main(){
 
     if(printIntroduction()){
         // load from file
-        grid = initializeGridFromFile(gridSizeX, gridSizeY);
+        string filename;
+        cout << "Enter filename: ";
+        cin >> filename;
+        grid = initializeGridFromFile(gridSizeX, gridSizeY, filename);
+        if(grid.empty()){
+            cout << "Failed to load grid from file. Exiting..." << endl;
+            return 1;
+        }
     }else{
         // random initialization
+        cout << "Enter grid size X (ex. 80): ";
+        cin >> gridSizeX;
+        cout << "Enter grid size Y (ex. 20): ";
+        cin >> gridSizeY;
         grid = initializeGridRandom(gridSizeX, gridSizeY);
     }
 

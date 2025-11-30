@@ -2,6 +2,50 @@
 
 Idea contributed by [Ludwig Kratzl](ludwig.kratzl@tum.de).
 
+
+## Build and Run
+
+To build and run the project on macOS or Linux, please follow these steps in your terminal:
+
+1. Clone the repository (if you haven't already):
+```
+git clone <repository-url>
+cd <repository-directory>
+```
+
+2. Initialize and update the Google Test submodule:
+```
+git submodule update --init --recursive
+```
+
+3. Create a build directory and navigate into it:
+```
+mkdir build
+cd build
+```
+
+4. Generate the build files using CMake:
+```
+cmake ..
+```
+
+5. Build the project:
+```
+cmake --build .
+```
+
+6. Run the main program (replace `GameOfLife` with the actual executable name if different):
+```
+./GameOfLife
+```
+
+7. To run the game_tests (assuming the tests executable is named `game_tests`):
+```
+./game_tests
+```
+
+These instructions assume the project is configured to include Google Test as a submodule and that CMakeLists.txt is properly set up to build both the main application and the tests.
+
 ## Motivation
 [Conway's Game Of Life](https://de.wikipedia.org/wiki/Conways_Spiel_des_Lebens) is an easy realization of a cellular automaton, which models dynamic but discrete systems. 
 In this project, we create a simulation that realizes such systems.

@@ -59,8 +59,9 @@ void calculateNextState(std::vector<std::vector<Cell>> &grid);
 //   - grid: the grid to simulate (modified in-place)
 //   - stepsNumber: number of iterations to run
 //   - delayMs: milliseconds to wait between iterations (default 100)
+//   - print: whether to print the board each iteration (default true)
 // =========================================================
-void runSimulation(std::vector<std::vector<Cell>> &grid, int stepsNumber, int delayMs = 100);
+void runSimulation(std::vector<std::vector<Cell>> &grid, int stepsNumber, int delayMs = 100, bool print = true);
 
 
 // =========================================================

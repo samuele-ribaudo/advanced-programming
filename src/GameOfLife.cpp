@@ -62,7 +62,6 @@ std::vector<std::vector<Cell>> initializeGridFromFile(int &gridSizeX, int &gridS
     std::ifstream patternFile(filename);
 
     while(!patternFile.is_open() || !patternFile.good()){
-        cout << "Error opening file: " << filename << endl;
         return std::vector<std::vector<Cell>>(); // return empty grid on error
     }
 
@@ -176,9 +175,10 @@ void calculateNextState(std::vector<std::vector<Cell>> &grid){
 //   - grid: 2D vector of Cells representing the game grid (modified in place).
 //   - stepsNumber: number of iterations to run the simulation.
 //   - delayMs: delay in milliseconds between each iteration (default 100).
+//   - print: whether to print the board each iteration (default true).
 // Returns: None
 // ========================================================================================
-void runSimulation(std::vector<std::vector<Cell>> &grid, int stepsNumber, int delayMs){
+void runSimulation(std::vector<std::vector<Cell>> &grid, int stepsNumber, int delayMs, bool print){
     int gridSizeX = grid.size();
     int gridSizeY = grid[0].size();
 
@@ -186,9 +186,11 @@ void runSimulation(std::vector<std::vector<Cell>> &grid, int stepsNumber, int de
         std::this_thread::sleep_for(std::chrono::milliseconds(delayMs));
 
         // print grid
-        system("clear");
-        printBoard(grid);
-        cout << "Iteration: " << step << " / " << stepsNumber << "\n";
+        if (print) {
+            system("clear");
+            printBoard(grid);
+            cout << "Iteration: " << step << " / " << stepsNumber << "\n";
+        }
 
         if (step == stepsNumber)
             break;

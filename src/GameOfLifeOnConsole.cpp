@@ -23,7 +23,7 @@ public:
     bool nextState;
 };
 
-void DrawLine(int l);
+void drawLine(int l);
 
 int printIntroduction(){
     // Print introduction message ad returns:
@@ -48,6 +48,24 @@ int printIntroduction(){
     }
 
     return option == 'a' ? 0 : 1;
+}
+
+
+void printBoard(const std::vector<std::vector<Cell>> &grid){
+    system("clear");
+    int gridSizeY = grid[0].size();
+    int gridSizeX = grid.size();
+
+    drawLine(gridSizeX);
+
+    for(int y = 0; y < gridSizeY; y++){
+        for(int x = 0; x < gridSizeX; x++){
+            if (grid[x][y].isAlive) cout << "█";
+            else cout << " ";
+        }
+        cout << endl;
+    }
+    drawLine(gridSizeX);
 }
 
 
@@ -110,7 +128,6 @@ std::vector<std::vector<Cell>> initializeGridRandom(int &gridSizeX, int &gridSiz
 }
 
 
-
 int main()
 {
     srand(time(NULL));
@@ -137,25 +154,7 @@ int main()
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
         // print grid
-        system("clear");
-        DrawLine(gridSizeX);
-
-        for (int y = 0; y < gridSizeY; y++)
-        {
-            for (int x = 0; x < gridSizeX; x++)
-            {
-                if (grid[x][y].isAlive)
-                {
-                    cout << "█";
-                }
-                else
-                {
-                    cout << " ";
-                }
-            }
-            cout << endl;
-        }
-        DrawLine(gridSizeX);
+        printBoard(grid);
         cout << "Iteration: " << step << " / " << max_step << "\n";
 
         if (step == max_step)
@@ -262,7 +261,7 @@ int main()
     return 0;
 }
 
-void DrawLine(int l)
+void drawLine(int l)
 {
 
     for (int i = 0; i < l; i++)

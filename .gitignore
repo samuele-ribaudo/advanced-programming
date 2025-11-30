@@ -1,13 +1,8 @@
 # --------------------------
 # Build directories
 # --------------------------
-/build/
-*.o
-*.obj
-*.a
-*.so
-*.dylib
-*.exe
+/build/*
+!/build/.gitkeep
 
 # --------------------------
 # CMake files
@@ -38,7 +33,8 @@ Testing/
 # --------------------------
 # Output files
 # --------------------------
-/output/
+/output/*
+!/output/.gitkeep
 
 # --------------------------
 # Misc temporary files

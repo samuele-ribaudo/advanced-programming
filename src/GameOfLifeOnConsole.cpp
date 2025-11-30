@@ -5,6 +5,7 @@
 #include <cctype>
 #include <ctime>
 #include <stdlib.h>
+#include <vector>
 
 #include <chrono>
 #include <thread>
@@ -23,6 +24,7 @@ public:
 };
 
 void DrawLine(int l);
+
 
 int printIntroduction(){
     // Print introduction message ad returns:
@@ -50,6 +52,66 @@ int printIntroduction(){
 }
 
 
+std::vector<std::vector<Cell>> initializeGridFromFile(int &gridSizeX, int &gridSizeY){
+    
+    std::ifstream patternFile;
+    string filename;
+
+    while(true){
+        cout << "Enter filename: ";
+        cin >> filename;
+        patternFile.open(filename);
+
+        if(patternFile.is_open() && patternFile.good()) break;
+
+        cout << "Error opening file! Try again..." << endl;
+        patternFile.clear();
+    }
+
+    string sizeStr;
+    patternFile >> sizeStr;
+    gridSizeX = std::stoi(sizeStr);
+    patternFile >> sizeStr;
+    gridSizeY = std::stoi(sizeStr);
+
+    std::vector<std::vector<Cell>> grid(gridSizeX, std::vector<Cell>(gridSizeY));
+
+    for(int y = 0; y < gridSizeY; y++){
+        for(int x = 0; x < gridSizeX; x++){
+            char c;
+            do{
+                c = patternFile.get();
+            }while(std::isspace(static_cast<unsigned char>(c)) && patternFile.good());
+
+            grid[x][y].isAlive = (c == '1');
+            grid[x][y].nextState = false;
+        }
+    }
+    patternFile.close();
+    return grid;
+}
+
+
+std::vector<std::vector<Cell>> initializeGridRandom(int &gridSizeX, int &gridSizeY) {
+    cout << "Enter grid size X (ex. 80): ";
+    cin >> gridSizeX;
+    cout << "Enter grid size Y (ex. 20): ";
+    cin >> gridSizeY;
+
+    std::vector<std::vector<Cell>> grid(gridSizeX, std::vector<Cell>(gridSizeY));
+
+    for (int y = 0; y < gridSizeY; y++) {
+        for (int x = 0; x < gridSizeX; x++) {
+            int randNum = rand() % 100;
+            grid[x][y].isAlive = (randNum < 20);
+            grid[x][y].nextState = false;
+        }
+    }
+    return grid;
+}
+
+
+
 int main()
 {
     srand(time(NULL));
@@ -57,75 +119,18 @@ int main()
     int max_step = 30;
     int gridSizeX = 80;
     int gridSizeY = 20;
-    bool isFileInput;
-    std::ifstream patternFile;
+    std::vector<std::vector<Cell>> grid;
 
     if(printIntroduction()){
         // load from file
-
-        isFileInput = true;
-        cout << "Enter filename: ";
-        string filename;
-        cin >> filename;
-        patternFile.open(filename);
-        if (!patternFile.is_open() || !patternFile.good())
-        {
-            cout << "Error opening file! Exiting..." << endl;
-            return 1;
-        }
-
-        string sizeStr;
-        patternFile >> sizeStr;
-        gridSizeX = std::stoi(sizeStr);
-        patternFile >> sizeStr;
-        gridSizeY = std::stoi(sizeStr);
-
+        grid = initializeGridFromFile(gridSizeX, gridSizeY);
     }else{
         // random initialization
-
-        isFileInput = false;
-        cout << "Entez grid size X (ex. 80): ";
-        cin >> gridSizeX;
-        cout << "Entez grid size Y (ex. 20): ";
-        cin >> gridSizeY;
+        grid = initializeGridRandom(gridSizeX, gridSizeY);
     }
 
     cout << "Enter number of time steps (ex. 30): ";
     cin >> max_step;
-
-
-    // create grid with random alive cells
-    Cell grid[gridSizeX][gridSizeY];
-    for (int y = 0; y < gridSizeY; y++)
-    {
-        for (int x = 0; x < gridSizeX; x++)
-        {
-            grid[x][y].nextState = false;
-
-            if (isFileInput)
-            {
-                if ( patternFile.is_open() && patternFile.good())
-                {
-                    char c;
-                    do {
-                        c = patternFile.get();
-                    } while (std::isspace(static_cast<unsigned char>(c)) && patternFile.good());
-                    grid[x][y].isAlive = c == '1';
-                }
-                else
-                {
-                    grid[x][y].isAlive = false;
-                }
-            }
-            else
-            {
-                int randNum = rand() % 100;
-                grid[x][y].isAlive = randNum < 20;
-            }
-        }
-    }
-    if (isFileInput && patternFile)
-        patternFile.close();
 
     // Sim loop
     for (int step = 0; step <= max_step; step++)

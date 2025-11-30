@@ -44,7 +44,6 @@ Testing/
 *.swp
 *~
 
-# --------------------------
-# Submodules are tracked separately, no need to ignore
-# --------------------------
-# external/googletest/ (do not ignore)
+# macOS Finder metadata
+.DS_Store
+*/.DS_Store

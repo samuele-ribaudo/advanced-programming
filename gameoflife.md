@@ -18,9 +18,8 @@ cd <repository-directory>
 git submodule update --init --recursive
 ```
 
-3. Create a build directory and navigate into it:
+3. Navigate into build directory:
 ```
-mkdir build
 cd build
 ```
 

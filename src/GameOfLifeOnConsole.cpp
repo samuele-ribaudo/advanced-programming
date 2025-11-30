@@ -25,7 +25,6 @@ public:
 
 void DrawLine(int l);
 
-
 int printIntroduction(){
     // Print introduction message ad returns:
     //      0 if the user wants to initialize a random grid

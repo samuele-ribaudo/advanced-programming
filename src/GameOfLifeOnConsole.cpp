@@ -23,13 +23,25 @@ public:
     bool nextState;
 };
 
-void drawLine(int l);
 
+// =========================================================
+// Draws a horizontal line of length l using '-' characters.
+// Parameters:
+//   - l: length of the line to draw.
+// Returns: None
+// =========================================================
+void drawLine(int l){
+    for (int i = 0; i < l; i++) cout << "-";
+    cout << '\n';
+}
+
+
+// ====================================================================================
+// Displays the introduction menu and prompts the user to choose initialization method.
+// Parameters: None
+// Returns: 0 for random grid initialization, 1 for loading grid from file.
+// ====================================================================================
 int printIntroduction(){
-    // Print introduction message ad returns:
-    //      0 if the user wants to initialize a random grid
-    //      1 if the user wants to load a grid from a file
-
     char option;
 
     system("clear");
@@ -51,6 +63,12 @@ int printIntroduction(){
 }
 
 
+// ==========================================================
+// Prints the current state of the game board to the console.
+// Parameters:
+//   - grid: 2D vector of Cells representing the game grid.
+// Returns: None
+// ==========================================================
 void printBoard(const std::vector<std::vector<Cell>> &grid){
     system("clear");
     int gridSizeY = grid[0].size();
@@ -69,6 +87,13 @@ void printBoard(const std::vector<std::vector<Cell>> &grid){
 }
 
 
+// ======================================================
+// Initializes the grid by loading a pattern from a file.
+// Parameters:
+//   - gridSizeX: reference to int to store grid width.
+//   - gridSizeY: reference to int to store grid height.
+// Returns: 2D vector of Cells initialized from the file.
+// ======================================================
 std::vector<std::vector<Cell>> initializeGridFromFile(int &gridSizeX, int &gridSizeY){
     
     std::ifstream patternFile;
@@ -109,7 +134,17 @@ std::vector<std::vector<Cell>> initializeGridFromFile(int &gridSizeX, int &gridS
 }
 
 
-std::vector<std::vector<Cell>> initializeGridRandom(int &gridSizeX, int &gridSizeY) {
+// ================================================================================
+// Initializes the grid randomly with a given probability of alive cells.
+// Parameters:
+//   - gridSizeX: reference to int to store grid width.
+//   - gridSizeY: reference to int to store grid height.
+//   - p: integer percentage probability (0-100) that a cell is alive (default 20).
+// Returns: 2D vector of Cells initialized randomly.
+// ================================================================================
+std::vector<std::vector<Cell>> initializeGridRandom(int &gridSizeX, int &gridSizeY, int p = 20) {
+    if(p < 0 || p > 100) p = 20;
+
     cout << "Enter grid size X (ex. 80): ";
     cin >> gridSizeX;
     cout << "Enter grid size Y (ex. 20): ";
@@ -120,7 +155,7 @@ std::vector<std::vector<Cell>> initializeGridRandom(int &gridSizeX, int &gridSiz
     for (int y = 0; y < gridSizeY; y++) {
         for (int x = 0; x < gridSizeX; x++) {
             int randNum = rand() % 100;
-            grid[x][y].isAlive = (randNum < 20);
+            grid[x][y].isAlive = (randNum < p);
             grid[x][y].nextState = false;
         }
     }
@@ -128,6 +163,12 @@ std::vector<std::vector<Cell>> initializeGridRandom(int &gridSizeX, int &gridSiz
 }
 
 
+// =======================================================================================
+// Calculates the next state of each cell in the grid according to the Game of Life rules.
+// Parameters:
+//   - grid: 2D vector of Cells representing the current game grid (modified in place).
+// Returns: None
+// =======================================================================================
 void calculateNextState(std::vector<std::vector<Cell>> &grid){
     
     int gridSizeX = grid.size();
@@ -177,6 +218,14 @@ void calculateNextState(std::vector<std::vector<Cell>> &grid){
 }
 
 
+// ========================================================================================
+// Runs the Game of Life simulation for a given number of steps with a delay between steps.
+// Parameters:
+//   - grid: 2D vector of Cells representing the game grid (modified in place).
+//   - stepsNumber: number of iterations to run the simulation.
+//   - delayMs: delay in milliseconds between each iteration (default 100).
+// Returns: None
+// ========================================================================================
 void runSimulation(std::vector<std::vector<Cell>> &grid, int stepsNumber, int delayMs = 100){
     int gridSizeX = grid.size();
     int gridSizeY = grid[0].size();
@@ -197,6 +246,13 @@ void runSimulation(std::vector<std::vector<Cell>> &grid, int stepsNumber, int de
 }
 
 
+// ======================================================================================
+// Saves the final grid state to a text file.
+// Parameters:
+//   - grid: 2D vector of Cells representing the final game grid.
+//   - filename: optional string filename to save to (default "final_constellation.txt").
+// Returns: the filename used for saving (empty string if error).
+// ======================================================================================
 std::string saveFinalGrid(const std::vector<std::vector<Cell>> &grid, std::string filename = "final_constellation.txt"){
     int gridSizeX = grid.size();
     int gridSizeY = grid[0].size();
@@ -263,15 +319,4 @@ int main(){
     }
 
     return 0;
-}
-
-
-void drawLine(int l)
-{
-
-    for (int i = 0; i < l; i++)
-    {
-        cout << "-";
-    }
-    cout << '\n';
 }

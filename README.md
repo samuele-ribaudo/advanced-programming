@@ -1,27 +1,6 @@
 ## Project structure
 
-```
-89
-├── CMakeLists.txt
-├── README.md
-├── docs
-│   ├── gameoflife.md
-│   └── todos.md
-├── include
-│   └── GameOfLife.h
-├── input
-│   └── spaceship_test.txt
-├── output
-├── src
-│   ├── GameOfLife.cpp
-│   └── main.cpp
-├── test
-│    └── game_tests.cpp
-├── build
-└── external
-```
-
-The project is organized as follows:
+###The project is organized as follows:
 - `docs/`: Contains project documentation, instructions, and explanations.
 - `src/`: Contains the source code files implementing the core functionality of the Game of Life simulation.
 - `include/`: Contains header files declaring classes and functions used throughout the project.
@@ -31,6 +10,30 @@ The project is organized as follows:
 - `build/`: The directory where build files and compiled binaries are generated.
 - `external/`: Contains submodules such as Google Test and any other third-party dependencies.
 - `CMakeLists.txt`: The CMake configuration file used to build the project and manage dependencies.
+
+```
+89
+├── CMakeLists.txt
+├── README.md
+├── docs
+│   ├── gameoflife.md
+│   └── todos.md
+├── include
+│   ├── GameOfLife.h
+│   └── ...
+├── input
+│   ├── spaceship_test.txt
+│   └── ...
+├── output
+├── src
+│   ├── GameOfLife.cpp
+│   ├── main.cpp
+│   └── ...
+├── test
+│    └── game_tests.cpp
+├── build
+└── external
+```
 
 
 ## Build and Run (macOS or Linux)

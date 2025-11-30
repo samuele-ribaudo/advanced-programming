@@ -47,7 +47,7 @@ int main(){
         string filename;
         cout << "Enter filename: ";
         cin >> filename;
-        filename = "input/" + filename;
+        filename = "../input/" + filename;
         grid = initializeGridFromFile(gridSizeX, gridSizeY, filename);
         if(grid.empty()){
             cout << "Failed to load grid from file. Exiting..." << endl;
@@ -78,7 +78,7 @@ int main(){
         string filename;
         cout << "Enter filename: ";
         cin >> filename;
-        filename = "output/" + filename;
+        filename = "../output/" + filename;
 
         string savedFile = saveFinalGrid(grid, filename);
         if(!savedFile.empty()) cout << "Final constellation saved to file: " << savedFile << endl;

@@ -197,6 +197,31 @@ void runSimulation(std::vector<std::vector<Cell>> &grid, int stepsNumber, int de
 }
 
 
+std::string saveFinalGrid(const std::vector<std::vector<Cell>> &grid, std::string filename = "final_constellation.txt"){
+    int gridSizeX = grid.size();
+    int gridSizeY = grid[0].size();
+
+    if(filename.find(".txt") == string::npos) filename += ".txt";
+    
+    std::ofstream outFile (filename);
+    if(!outFile.is_open()){
+        cout << "Error saving file!" << endl;
+        return "";
+    }
+
+    outFile << gridSizeX << endl << gridSizeY << endl;
+    for(int y = 0; y < gridSizeY; y++){
+        for(int x = 0; x < gridSizeX; x++){
+            if(grid[x][y].isAlive) outFile << "1";
+            else outFile << "0";
+        }
+        outFile << endl;
+    }
+    outFile.close();
+    
+    return filename;
+}
+
 
 int main(){
 
@@ -221,32 +246,22 @@ int main(){
     // run simulation
     runSimulation(grid, stepsNumber);
 
-    string saveFinalConstellation;
-    cout << "Save final constellation? (Y/N): ";
-    cin >> saveFinalConstellation;
-    if (saveFinalConstellation == "Y") {
-        cout << "Enter filename: ";
-        cin >> saveFinalConstellation;
-        if(saveFinalConstellation.find(".txt") == string::npos) saveFinalConstellation += ".txt";
-        std::ofstream outFile (saveFinalConstellation);
-        outFile << gridSizeX << endl << gridSizeY << endl;
-        for (int y = 0; y < gridSizeY; y++)
-        {
-            for (int x = 0; x < gridSizeX; x++)
-            {
-                if (grid[x][y].isAlive)
-                {
-                    outFile << "1";
-                }
-                else
-                {
-                    outFile << "0";
-                }
-            }
-            outFile << endl;
-        }
+    char answer;
+    do{
+        cout << "Save final constellation? (Y/N): ";
+        cin >> answer;
+    }while(answer != 'Y' && answer != 'y' && answer != 'N' && answer != 'n');
 
+    if(answer == 'Y' || answer == 'y'){
+        string filename;
+        cout << "Enter filename: ";
+        cin >> filename;
+
+        string savedFile = saveFinalGrid(grid, filename);
+        if(!savedFile.empty()) cout << "Final constellation saved to file: " << savedFile << endl;
+        else cout << "Error saving final constellation!" << endl;
     }
+
     return 0;
 }
 

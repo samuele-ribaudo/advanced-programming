@@ -1,6 +1,6 @@
 ## Project structure
 
-###The project is organized as follows:
+**The project is organized as follows:**
 - `docs/`: Contains project documentation, instructions, and explanations.
 - `src/`: Contains the source code files implementing the core functionality of the Game of Life simulation.
 - `include/`: Contains header files declaring classes and functions used throughout the project.

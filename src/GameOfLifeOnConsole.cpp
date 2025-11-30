@@ -128,11 +128,81 @@ std::vector<std::vector<Cell>> initializeGridRandom(int &gridSizeX, int &gridSiz
 }
 
 
-int main()
-{
+void calculateNextState(std::vector<std::vector<Cell>> &grid){
+    
+    int gridSizeX = grid.size();
+    int gridSizeY = grid[0].size();
+
+    for(int y = 0; y < gridSizeY; y++){
+        for(int x = 0; x < gridSizeX; x++){
+            //count the neighbors that are alive
+            int aliveNeighbours = 0;
+            for(int x_off = -1; x_off < 2; x_off++){
+                for(int y_off = -1; y_off < 2; y_off++){
+                    //ignore itself
+                    if(x_off == 0 && y_off == 0) continue;
+                    
+                    int x_neighbour = x + x_off;
+                    int y_neighbour = y + y_off;
+
+                    //skip if the cell is at the edge
+                    if(x_neighbour < 0 || x_neighbour >= gridSizeX || y_neighbour < 0 || y_neighbour >= gridSizeY) continue;
+                    if(grid[x_neighbour][y_neighbour].isAlive) aliveNeighbours++;
+                }
+            }
+
+            // Rules:
+            // 1) Any live cell with fewer than two live neighbours dies
+            // 2) Any live cell with two or three live neighbours lives on to the next generation
+            // 3) Any live cell with more than three live neighbours dies
+            // 4) Any dead cell with exactly three live neighbours becomes a live cell
+
+            if(grid[x][y].isAlive){
+                if(aliveNeighbours == 2 || aliveNeighbours == 3) grid[x][y].nextState = true;
+                else grid[x][y].nextState = false;
+            
+            }else{
+                if(aliveNeighbours == 3) grid[x][y].nextState = true;
+                else grid[x][y].nextState = false;
+            }
+        }
+    }
+
+    // apply changes
+    for(int y = 0; y < gridSizeY; y++){
+        for(int x = 0; x < gridSizeX; x++){
+            grid[x][y].isAlive = grid[x][y].nextState;
+        }
+    }
+}
+
+
+void runSimulation(std::vector<std::vector<Cell>> &grid, int stepsNumber, int delayMs = 100){
+    int gridSizeX = grid.size();
+    int gridSizeY = grid[0].size();
+
+    for(int step = 0; step <= stepsNumber; step++){
+        std::this_thread::sleep_for(std::chrono::milliseconds(delayMs));
+
+        // print grid
+        printBoard(grid);
+        cout << "Iteration: " << step << " / " << stepsNumber << "\n";
+
+        if (step == stepsNumber)
+            break;
+
+        // calculate next state
+        calculateNextState(grid);
+    }
+}
+
+
+
+int main(){
+
     srand(time(NULL));
 
-    int max_step = 30;
+    int stepsNumber = 30;
     int gridSizeX = 80;
     int gridSizeY = 20;
     std::vector<std::vector<Cell>> grid;
@@ -146,92 +216,11 @@ int main()
     }
 
     cout << "Enter number of time steps (ex. 30): ";
-    cin >> max_step;
+    cin >> stepsNumber;
 
-    // Sim loop
-    for (int step = 0; step <= max_step; step++)
-    {
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    // run simulation
+    runSimulation(grid, stepsNumber);
 
-        // print grid
-        printBoard(grid);
-        cout << "Iteration: " << step << " / " << max_step << "\n";
-
-        if (step == max_step)
-            break;
-        // calculate next state
-        for (int y = 0; y < gridSizeY; y++)
-        {
-            for (int x = 0; x < gridSizeX; x++)
-            {
-                // count the neighbors that are alive
-                int aliveNeighbours = 0;
-                for (int x_off = -1; x_off < 2; x_off++)
-                {
-                    for (int y_off = -1; y_off < 2; y_off++)
-                    {
-                        // ignore itself
-                        if (x_off == 0 && y_off == 0)
-                            continue;
-
-                        int x_neighbour = x + x_off;
-                        int y_neighbour = y + y_off;
-
-                        // skip if the cell is at the edge
-                        if (x_neighbour < 0 || x_neighbour >= gridSizeX || y_neighbour < 0 || y_neighbour >= gridSizeY)
-                             continue;
-
-                        /*
-                        // Loop at edge
-                        if (x_neighbour < 0)
-                            x_neighbour = gridSizeX - 1;
-                        if (x_neighbour >= gridSizeX)
-                            x_neighbour = 0;
-                        if (y_neighbour < 0)
-                            y_neighbour = gridSizeY - 1;
-                        if (y_neighbour >= gridSizeY)
-                            y_neighbour = 0;
-                        */
-
-                        if (grid[x_neighbour][y_neighbour].isAlive)
-                            aliveNeighbours += 1;
-                    }
-                }
-
-                // Rules:
-                // 1) Any live cell with fewer than two live neighbours dies
-                // 2) Any live cell with two or three live neighbours lives on to the next generation
-                // 3) Any live cell with more than three live neighbours dies
-                // 4) Any dead cell with exactly three live neighbours becomes a live cell
-
-                if (grid[x][y].isAlive)
-                {
-                    if (aliveNeighbours == 2 || aliveNeighbours == 3) {
-                        grid[x][y].nextState = true;
-                    }
-                    else {
-                        grid[x][y].nextState = false;
-                    }
-                }
-                else
-                {
-                    if (aliveNeighbours == 3)
-                        grid[x][y].nextState = true;
-                    else
-                        grid[x][y].nextState = false;
-                }
-            }
-        }
-
-        // apply changes
-        for (int y = 0; y < gridSizeY; y++)
-        {
-            for (int x = 0; x < gridSizeX; x++)
-            {
-                grid[x][y].isAlive = grid[x][y].nextState;
-            }
-        }
-    }
     string saveFinalConstellation;
     cout << "Save final constellation? (Y/N): ";
     cin >> saveFinalConstellation;
@@ -260,6 +249,7 @@ int main()
     }
     return 0;
 }
+
 
 void drawLine(int l)
 {

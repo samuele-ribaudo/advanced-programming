@@ -40,6 +40,7 @@ In this sprint, we want to create a first prototype that simulates the system. T
 * Basic test cases are implemented to verify that the simulation works as expected (some grids found on [wikipedia](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life#Examples_of_patterns) can be used)
 * (optional) Unit tests are implemented (preferably using a testing library like [gtest](https://github.com/google/googletest) )
 
+
 ## Sprint 2
 In this sprint, we want to create an interactive simulation and add more dynamics to the system. The program should also be refactored into classes to facilitate more complex behaviour and multiple simulations.
 
@@ -53,6 +54,7 @@ In this sprint, we want to create an interactive simulation and add more dynamic
 * The program does not exit after the last time step 
 * The simulation is extended to an infinite grid: if a boundary of the grid is reached, additional rows/columns are added
 * (optional) The simulation is animated in the terminal window (this can be done by clearing the terminal and adding delays between simulation steps)
+
 
 ## Sprint 3
 In this sprint, we want to extend the simulation to an infinite grid. This should be done in an efficient way to optimize performance, STL containers or custom data structures may be used.

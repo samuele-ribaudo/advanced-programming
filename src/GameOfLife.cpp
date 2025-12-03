@@ -4,24 +4,14 @@
 #include <cstdlib>
 #include <cctype>
 #include <ctime>
-#include <stdlib.h>
-#include <vector>
-
-#include <chrono>
 #include <thread>
+#include <chrono>
 
-using std::cin;
+#include "GameOfLife.h"
+
 using std::cout;
 using std::endl;
 using std::string;
-using std::atoi;
-
-class Cell
-{
-public:
-    bool isAlive;
-    bool nextState;
-};
 
 
 // =========================================================
@@ -36,33 +26,6 @@ void drawLine(int l){
 }
 
 
-// ====================================================================================
-// Displays the introduction menu and prompts the user to choose initialization method.
-// Parameters: None
-// Returns: 0 for random grid initialization, 1 for loading grid from file.
-// ====================================================================================
-int printIntroduction(){
-    char option;
-
-    system("clear");
-    cout << "=====================" << endl;
-    cout << "Conway's Game of Life" << endl;
-    cout << "=====================" << endl;
-    cout << "a) initialize random grid" << endl;
-    cout << "b) load grid from file" << endl;
-    cout << "Choose option (a/b): ";
-    cin >> option;
-
-    while(option != 'a' && option != 'b')
-    {
-        cout << "Invalid option! Choose option (a/b): ";
-        cin >> option;
-    }
-
-    return option == 'a' ? 0 : 1;
-}
-
-
 // ==========================================================
 // Prints the current state of the game board to the console.
 // Parameters:
@@ -70,7 +33,6 @@ int printIntroduction(){
 // Returns: None
 // ==========================================================
 void printBoard(const std::vector<std::vector<Cell>> &grid){
-    system("clear");
     int gridSizeY = grid[0].size();
     int gridSizeX = grid.size();
 
@@ -100,7 +62,6 @@ std::vector<std::vector<Cell>> initializeGridFromFile(int &gridSizeX, int &gridS
     std::ifstream patternFile(filename);
 
     while(!patternFile.is_open() || !patternFile.good()){
-        cout << "Error opening file: " << filename << endl;
         return std::vector<std::vector<Cell>>(); // return empty grid on error
     }
 
@@ -136,7 +97,7 @@ std::vector<std::vector<Cell>> initializeGridFromFile(int &gridSizeX, int &gridS
 //   - p: integer percentage probability (0-100) that a cell is alive (default 20).
 // Returns: 2D vector of Cells initialized randomly.
 // ================================================================================
-std::vector<std::vector<Cell>> initializeGridRandom(int gridSizeX, int gridSizeY, int p = 20){
+std::vector<std::vector<Cell>> initializeGridRandom(int gridSizeX, int gridSizeY, int p){
     
     if(p < 0 || p > 100) p = 20; // default probability if out of range
 
@@ -214,9 +175,10 @@ void calculateNextState(std::vector<std::vector<Cell>> &grid){
 //   - grid: 2D vector of Cells representing the game grid (modified in place).
 //   - stepsNumber: number of iterations to run the simulation.
 //   - delayMs: delay in milliseconds between each iteration (default 100).
+//   - print: whether to print the board each iteration (default true).
 // Returns: None
 // ========================================================================================
-void runSimulation(std::vector<std::vector<Cell>> &grid, int stepsNumber, int delayMs = 100){
+void runSimulation(std::vector<std::vector<Cell>> &grid, int stepsNumber, int delayMs, bool print){
     int gridSizeX = grid.size();
     int gridSizeY = grid[0].size();
 
@@ -224,8 +186,11 @@ void runSimulation(std::vector<std::vector<Cell>> &grid, int stepsNumber, int de
         std::this_thread::sleep_for(std::chrono::milliseconds(delayMs));
 
         // print grid
-        printBoard(grid);
-        cout << "Iteration: " << step << " / " << stepsNumber << "\n";
+        if (print) {
+            system("clear");
+            printBoard(grid);
+            cout << "Iteration: " << step << " / " << stepsNumber << "\n";
+        }
 
         if (step == stepsNumber)
             break;
@@ -243,7 +208,7 @@ void runSimulation(std::vector<std::vector<Cell>> &grid, int stepsNumber, int de
 //   - filename: optional string filename to save to (default "final_constellation.txt").
 // Returns: the filename used for saving (empty string if error).
 // ======================================================================================
-std::string saveFinalGrid(const std::vector<std::vector<Cell>> &grid, std::string filename = "final_constellation.txt"){
+std::string saveFinalGrid(const std::vector<std::vector<Cell>> &grid, std::string filename){
     int gridSizeX = grid.size();
     int gridSizeY = grid[0].size();
 
@@ -266,58 +231,4 @@ std::string saveFinalGrid(const std::vector<std::vector<Cell>> &grid, std::strin
     outFile.close();
     
     return filename;
-}
-
-
-int main(){
-
-    srand(time(NULL));
-
-    int stepsNumber = 30;
-    int gridSizeX = 80;
-    int gridSizeY = 20;
-    std::vector<std::vector<Cell>> grid;
-
-    if(printIntroduction()){
-        // load from file
-        string filename;
-        cout << "Enter filename: ";
-        cin >> filename;
-        grid = initializeGridFromFile(gridSizeX, gridSizeY, filename);
-        if(grid.empty()){
-            cout << "Failed to load grid from file. Exiting..." << endl;
-            return 1;
-        }
-    }else{
-        // random initialization
-        cout << "Enter grid size X (ex. 80): ";
-        cin >> gridSizeX;
-        cout << "Enter grid size Y (ex. 20): ";
-        cin >> gridSizeY;
-        grid = initializeGridRandom(gridSizeX, gridSizeY);
-    }
-
-    cout << "Enter number of time steps (ex. 30): ";
-    cin >> stepsNumber;
-
-    // run simulation
-    runSimulation(grid, stepsNumber);
-
-    char answer;
-    do{
-        cout << "Save final constellation? (Y/N): ";
-        cin >> answer;
-    }while(answer != 'Y' && answer != 'y' && answer != 'N' && answer != 'n');
-
-    if(answer == 'Y' || answer == 'y'){
-        string filename;
-        cout << "Enter filename: ";
-        cin >> filename;
-
-        string savedFile = saveFinalGrid(grid, filename);
-        if(!savedFile.empty()) cout << "Final constellation saved to file: " << savedFile << endl;
-        else cout << "Error saving final constellation!" << endl;
-    }
-
-    return 0;
 }

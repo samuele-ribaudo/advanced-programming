@@ -1,4 +1,6 @@
-# Vollständige UML-Klassenspezifikation – Game of Life
+# Complete UML-Class specification – Game of Life
+
+```- private```, ```+ public```, ```# protected```
 
 ## class Display
 

@@ -1,4 +1,4 @@
-## Project structure
+# Project structure
 
 **The project is organized as follows:**
 - `docs/`: Contains project documentation, instructions, and explanations.
@@ -34,7 +34,133 @@
 ```
 
 
-## Build and Run (macOS or Linux)
+# Complete UML design
+
+```- private```, ```+ public```, ```# protected```
+
+## class Cell
+
+```- bool isAlive```
+
+```- bool nextState```
+
+```+ Cell()```
+
+```+ Cell(bool alive)```
+
+```+ bool isAliveNow() const```  _returns the current alive state_
+
+```+ void setAlive(bool alive)```  _sets the current alive state_
+
+```+ bool getNextState() const```  _returns the buffered next state_
+
+```+ void setNextState(bool state)```  _sets the buffered next state_
+
+```+ void resetNextState()```  _sets nextState to false_
+
+
+## class Grid
+
+```- int width```
+
+```- int height```
+
+```- std::vector<std::vector<Cell>> cells```
+
+```+ Grid()```
+
+```+ Grid(int width, int height)```  _initializes a width×height grid with dead cells_
+
+```+ int getWidth() const```  _returns the current grid width_
+
+```+ int getHeight() const```  _returns the current grid height_
+
+```+ Cell& at(int x, int y)```  _access to the cell at (x, y)_
+
+```+ const Cell& at(int x, int y) const```  _const access to the cell at (x, y)_
+
+```+ bool isInside(int x, int y) const```  _checks if coordinates are inside the grid_
+
+```+ bool loadFromFile(const std::string& path)```  _loads grid size and cell states from a text file (0/1 format)_
+
+```+ void randomInit(int width, int height, int p = 20)```  _initializes the grid to given size with random live cells using probability p_
+
+```+ bool saveToFile(const std::string& path) const```  _writes width, height and all cell states (0/1) to a text file_
+
+```+ void stepClassicRules()```  _applies the standard Game of Life rules to all cells_
+
+```+ void stepAlternativeRules()```  _applies an alternative update rule to all cells_
+
+```+ void print() const```  _prints the grid to the terminal using a filled character for live cells_
+
+```- int countAliveNeighbors(int x, int y) const```  _counts live neighbors of a given cell_
+
+```- void resizeIfNeeded()```  _expands the grid if live cells reach a boundary (towards infinite grid)_
+
+
+## class Game
+
+```- Grid grid```
+
+```- int stepsNumber```
+
+```- int delayMs```
+
+```- bool useAltRules```
+
+```+ Game()```
+
+```+ Game(const Grid& initialGrid)```  _initializes a game with a preconfigured grid_
+
+```+ void setGrid(const Grid& g)```  _sets the internal grid_
+
+```+ Grid& getGrid()```  _returns a modifiable reference to the grid_
+
+```+ const Grid& getGrid() const```  _returns a const reference to the grid_
+
+```+ void setSteps(int steps)```  _sets how many generations to simulate_
+
+```+ void setDelay(int delayMs)```  _sets the delay in milliseconds between generations_
+
+```+ void setUseAlternativeRules(bool useAlt)```  _enables or disables the alternative rule set_
+
+```+ void run(bool printEachStep = true)```  _runs the simulation loop for the configured number of steps_
+
+```- void stepOnce()```  _performs a single generation update (classic or alternative rules)_
+
+
+## class Workflow
+
+```- Game game```
+
+```+ Workflow()```
+
+```+ void runMainLoop()```  _main application loop, repeats configuration and simulation until user exits_
+
+```+ void configureFromUser()```  _asks the user how to initialize the grid and how many steps to simulate_
+
+```+ void showMenu()```  _prints the main menu (random grid or load from file)_
+
+```+ bool askLoadFromFile()```  _asks whether to load the grid from a file or create it randomly_
+
+```+ std::string askFilePath()```  _reads the input filename (typically relative to the input folder)_
+
+```+ void askRandomGridParams(int& w, int& h, int& p)```  _reads width, height and live‑cell probability for random initialization_
+
+```+ void askStepsAndDelay(int& steps, int& delayMs)```  _reads number of steps and delay in milliseconds_
+
+```+ bool askSaveFinal()```  _asks the user whether to save the final grid state_
+
+```+ std::string askOutputFilePath()```  _reads the output filename (typically in the output folder)_
+
+```- void initFromFile()```  _initializes the game grid from a file based on user input_
+
+```- void initRandom()```  _initializes the game grid randomly based on user parameters_
+
+```- void saveFinalIfRequested()```  _if requested, saves the final grid state to the chosen output file_
+
+
+# Build and Run (macOS or Linux)
 
 To build and run the project on macOS or Linux, please follow these steps in your terminal:
 

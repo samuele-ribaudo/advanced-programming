@@ -20,10 +20,10 @@ void Workflow::runMainLoop() {
         saveFinalIfRequested();
         
         char continue_choice;
-        std::cout << "Another simulation? (y/n): ";
+        std::cout << "Another simulation? (Y/N): ";
         std::cin >> continue_choice;
         while (continue_choice != 'y' && continue_choice != 'Y' && continue_choice != 'n' && continue_choice != 'N') {
-            std::cout << "Invalid option! Another simulation? (y/n): ";
+            std::cout << "Invalid option! Another simulation? (Y/N): ";
             std::cin >> continue_choice;
         }
 

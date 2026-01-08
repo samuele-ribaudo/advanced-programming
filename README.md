@@ -18,15 +18,15 @@
 │   ├── gameoflife.md
 │   └── todos.md
 ├── include
-│   ├── GameOfLife.h
+│   ├── Cell.h
 │   └── ...
 ├── input
 │   ├── spaceship_test.txt
 │   └── ...
 ├── output
 ├── src
-│   ├── GameOfLife.cpp
-│   ├── main.cpp
+│   ├── Cell.cpp
+│   ├── Grid.cpp
 │   └── ...
 ├── test
 │    └── game_tests.cpp

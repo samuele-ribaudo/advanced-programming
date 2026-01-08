@@ -32,3 +32,19 @@ target_include_directories(game_lib PUBLIC ${PROJECT_SOURCE_DIR}/include)
 # ---------------------------
 add_executable(GameOfLife src/main.cpp)
 target_link_libraries(GameOfLife PRIVATE game_lib)
+
+# ---------------------------
+# Enable testing
+# ---------------------------
+enable_testing()
+add_subdirectory(external/googletest)
+
+# ---------------------------
+# Google Test target
+# ---------------------------
+add_executable(game_tests test/game_tests.cpp)
+target_link_libraries(game_tests PRIVATE game_lib gtest gtest_main)
+
+include(GoogleTest)
+include(CTest)
+add_test(NAME game_tests COMMAND game_tests)

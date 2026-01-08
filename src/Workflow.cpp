@@ -56,7 +56,8 @@ std::string Workflow::askFilePath() {
     std::string filename;
     std::cout << "Enter filename (in input/): ";
     std::cin >> filename;
-    return "input/" + filename;
+    if(filename.size() < 4 || filename.substr(filename.size() - 4) != ".txt") filename += ".txt";
+    return "../input/" + filename;
 }
 
 void Workflow::askRandomGridParams(int& w, int& h, int& p) {
@@ -88,7 +89,8 @@ std::string Workflow::askOutputFilePath() {
     std::string filename;
     std::cout << "Enter filename (in output/): ";
     std::cin >> filename;
-    return "output/" + filename;
+    if(filename.size() < 4 || filename.substr(filename.size() - 4) != ".txt") filename += ".txt";
+    return "../output/" + filename;
 }
 
 void Workflow::initFromFile() {

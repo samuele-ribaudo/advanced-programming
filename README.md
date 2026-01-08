@@ -58,6 +58,8 @@
 
 ```+ void resetNextState()```  _sets nextState to false_
 
+```+ void applyNextState();```  _sets nextState to current state_
+
 
 ## class Grid
 

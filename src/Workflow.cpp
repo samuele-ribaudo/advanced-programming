@@ -2,8 +2,12 @@
 #include <iostream>
 #include <string>
 
+// Constructor for Workflow class
 Workflow::Workflow() {}
 
+
+// Runs the main loop of the workflow.
+// Handles menu display, grid initialization, game execution, and user prompts for continuation.
 void Workflow::runMainLoop() {
     while (true){
         game = Game(); // reset game
@@ -31,6 +35,8 @@ void Workflow::runMainLoop() {
     }
 }
 
+
+// Displays the main menu to the user
 void Workflow::showMenu() {
     system("clear");
     std::cout << "=====================" << std::endl;
@@ -41,6 +47,9 @@ void Workflow::showMenu() {
     std::cout << "Choose option (a/b): ";
 }
 
+
+// Asks the user whether to load the grid from a file or initialize randomly.
+// Return true if user chooses to load from file, false otherwise.
 bool Workflow::askLoadFromFile() {
     char option;
     std::cin >> option;
@@ -52,6 +61,9 @@ bool Workflow::askLoadFromFile() {
     return option == 'b';
 }
 
+
+// Asks the user for the file path to load the grid from.
+// @return the full path to the input file as a string.
 std::string Workflow::askFilePath() {
     std::string filename;
     std::cout << "Enter filename (in input/): ";
@@ -60,6 +72,12 @@ std::string Workflow::askFilePath() {
     return "../input/" + filename;
 }
 
+
+// Asks the user for parameters to initialize a random grid.
+// parameters:
+// - w Reference to grid width.
+// - h Reference to grid height.
+// - p Reference to live cell probability (0-100).
 void Workflow::askRandomGridParams(int& w, int& h, int& p) {
     std::cout << "Enter grid size X (ex. 80): ";
     std::cin >> w;
@@ -69,6 +87,11 @@ void Workflow::askRandomGridParams(int& w, int& h, int& p) {
     std::cin >> p;
 }
 
+
+// Asks the user for the number of time steps and delay between steps.
+// parameters: 
+// - steps Reference to number of time steps.
+// - delayMs Reference to delay between steps in milliseconds.
 void Workflow::askStepsAndDelay(int& steps, int& delayMs) {
     std::cout << "Enter number of time steps (ex. 30): ";
     std::cin >> steps;
@@ -76,6 +99,9 @@ void Workflow::askStepsAndDelay(int& steps, int& delayMs) {
     std::cin >> delayMs;
 }
 
+
+// Asks the user whether to save the final grid constellation.
+// Return true if user wants to save, false otherwise.
 bool Workflow::askSaveFinal() {
     char answer;
     do {
@@ -85,6 +111,8 @@ bool Workflow::askSaveFinal() {
     return (answer == 'Y' || answer == 'y');
 }
 
+// Asks the user for the output file path to save the final grid.
+// Return the full path to the output file as a string.
 std::string Workflow::askOutputFilePath() {
     std::string filename;
     std::cout << "Enter filename (in output/): ";
@@ -93,6 +121,9 @@ std::string Workflow::askOutputFilePath() {
     return "../output/" + filename;
 }
 
+
+// Initializes the grid from a file specified by the user.
+// If loading fails, falls back to random grid initialization.
 void Workflow::initFromFile() {
     std::string path = askFilePath();
     Grid g;
@@ -105,6 +136,8 @@ void Workflow::initFromFile() {
     game.setGrid(g);
 }
 
+
+// Initializes the grid randomly based on user-specified parameters.
 void Workflow::initRandom() {
     int w, h, p;
     askRandomGridParams(w, h, p);
@@ -113,6 +146,8 @@ void Workflow::initRandom() {
     game.setGrid(g);
 }
 
+
+// Saves the final grid to a file if the user requests it.
 void Workflow::saveFinalIfRequested() {
     if (askSaveFinal()) {
         std::string path = askOutputFilePath();

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vector>
+#include <deque>
 #include <string>
 #include "Cell.h"
 
@@ -36,7 +36,7 @@ public:
 private:
     int width;
     int height;
-    std::vector<std::vector<Cell>> cells;
+    std::deque<std::deque<Cell>> cells;
 
     int countAliveNeighbors(int x, int y) const;
     void resizeIfNeeded();

@@ -2,14 +2,14 @@
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
-#include <vector>
+#include <deque>
 #include <string>
 #include "Cell.h"
 
 
 Grid::Grid() : width(0), height(0) {}
 
-Grid::Grid(int w, int h) : width(w), height(h), cells(w, std::vector<Cell>(h)) {}
+Grid::Grid(int w, int h) : width(w), height(h), cells(w, std::deque<Cell>(h)) {}
 
 int Grid::getWidth() const { return width; }
 int Grid::getHeight() const { return height; }
@@ -35,7 +35,7 @@ bool Grid::loadFromFile(const std::string& path) {
     patternFile >> sizeStr;
     height = std::stoi(sizeStr);
 
-    cells.resize(width, std::vector<Cell>(height));
+    cells.resize(width, std::deque<Cell>(height));
 
     for(int y = 0; y < height; y++){
         for(int x = 0; x < width; x++){
@@ -60,7 +60,7 @@ void Grid::randomInit(int w, int h, int p) {
 
     if(p < 0 || p > 100) p = 20; // default probability if out of range
 
-    cells.resize(width, std::vector<Cell>(height));
+    cells.resize(width, std::deque<Cell>(height));
 
     for(int y = 0; y < height; y++){
         for(int x = 0; x < width; x++){
@@ -176,46 +176,41 @@ int Grid::countAliveNeighbors(int x, int y) const {
 
 
 void Grid::resizeIfNeeded() {
-    // expand the grid if a live cell reaches the border (infinity grid)
-    // Check TOP row (y=0)
+    // TOP row (y=0)
     for (int x = 0; x < width; x++) {
         if (cells[x][0].isAliveNow()) {
-            // Add new empty row at TOP (y=-1)
-            cells.insert(cells.begin(), std::vector<Cell>(width));
+            for (int xCol = 0; xCol < width; xCol++) {
+                cells[xCol].push_front(Cell());
+            }
             height++;
             break;
         }
     }
-    
-    // Check BOTTOM row (y=height-1)
+
+    // BOTTOM row (y=height-1)
     for (int x = 0; x < width; x++) {
         if (cells[x][height-1].isAliveNow()) {
-            // Add new empty row at BOTTOM (y=height)
-            cells.push_back(std::vector<Cell>(width));
+            for (int xCol = 0; xCol < width; xCol++) {
+                cells[xCol].push_back(Cell());
+            }
             height++;
             break;
         }
     }
-    
-    // Check LEFT column (x=0) - controlla TUTTE le righe
+
+    // LEFT column (x=0)
     for (int y = 0; y < height; y++) {
         if (cells[0][y].isAliveNow()) {
-            // Add new empty column at LEFT (x=-1)
-            for (int y_new = 0; y_new < height; ++y_new) {
-                cells[y_new].insert(cells[y_new].begin(), Cell());
-            }
+            cells.push_front(std::deque<Cell>(height));
             width++;
             break;
         }
     }
-    
-    // Check RIGHT column (x=width-1)
+
+    // RIGHT column (x=width-1)
     for (int y = 0; y < height; y++) {
         if (cells[width-1][y].isAliveNow()) {
-            // Add new empty column at RIGHT (x=width)
-            for (int y_new = 0; y_new < height; ++y_new) {
-                cells[y_new].push_back(Cell());
-            }
+            cells.push_back(std::deque<Cell>(height));
             width++;
             break;
         }

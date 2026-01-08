@@ -6,22 +6,27 @@
 #include <string>
 #include "Cell.h"
 
-
+// Default constructor: creates an empty grid
 Grid::Grid() : width(0), height(0) {}
 
+// Constructor: initializes a grid of given width (w) and height (h) with dead cells
 Grid::Grid(int w, int h) : width(w), height(h), cells(w, std::deque<Cell>(h)) {}
 
+// Returns the current width of the grid
 int Grid::getWidth() const { return width; }
+
+// Returns the current height of the grid
 int Grid::getHeight() const { return height; }
 
-
+// Returns a reference to the cell at position (x, y)
 Cell& Grid::at(int x, int y) { return cells[x][y]; }
-
 const Cell& Grid::at(int x, int y) const { return cells[x][y]; }
 
+// Checks if coordinates (x, y) are inside the grid boundaries
 bool Grid::isInside(int x, int y) const { return x >= 0 && x < width && y >= 0 && y < height; }
 
-
+// Loads grid size and cell states from a text file at 'path'
+// Returns true if successful, false otherwise
 bool Grid::loadFromFile(const std::string& path) {
     // initializeGridFromFile() code
     std::ifstream patternFile(path);
@@ -53,6 +58,7 @@ bool Grid::loadFromFile(const std::string& path) {
 }
 
 
+// Randomly initializes a grid of width w, height h, with probability p (0-100) of cells being alive
 void Grid::randomInit(int w, int h, int p) {
     //initializeGridRandom() code
     width = w;
@@ -72,6 +78,7 @@ void Grid::randomInit(int w, int h, int p) {
 }
 
 
+// Saves the current grid state to a text file at 'path'. Returns true if successful
 bool Grid::saveToFile(const std::string& path) const {
     //saveFinalGrid() code
     std::string filename = path;
@@ -95,14 +102,15 @@ bool Grid::saveToFile(const std::string& path) const {
     return true;
 }
 
+// Applies the classic Game of Life rules to each cell
+// 'resize' indicates whether the grid should expand if alive cells reach boundaries
+// Rules:
+//  1) Any live cell with fewer than two live neighbours dies
+//  2) Any live cell with two or three live neighbours lives on to the next generation
+//  3) Any live cell with more than three live neighbours dies
+//  4) Any dead cell with exactly three live neighbours becomes a live cell
 void Grid::stepClassicRules(bool resize) {
     //calculateNextState() code
-
-    // Rules:
-    // 1) Any live cell with fewer than two live neighbours dies
-    // 2) Any live cell with two or three live neighbours lives on to the next generation
-    // 3) Any live cell with more than three live neighbours dies
-    // 4) Any dead cell with exactly three live neighbours becomes a live cell
 
     // Determine next state for each cell
     for(int y = 0; y < height; y++){
@@ -137,16 +145,19 @@ void Grid::stepClassicRules(bool resize) {
     }
 }
 
+// Placeholder for alternative rules; currently calls classic rules
 void Grid::stepAlternativeRules(bool resize) {
     // Too boring to implement
     stepClassicRules(resize);
 }
 
+// Prints a horizontal line of length l
 void drawLine(int l){
     for (int i = 0; i < l; i++) std::cout << "-";
     std::cout << '\n';
 }
 
+// Prints the current grid to the console, live cells as '█', dead as space
 void Grid::print() const {
     // printBoard() code
     drawLine(width);
@@ -160,6 +171,7 @@ void Grid::print() const {
     drawLine(width);
 }
 
+// Counts the number of alive neighbors around the cell at (x, y)
 int Grid::countAliveNeighbors(int x, int y) const {
     // count alive neighbors (ignoring out-of-bounds)
     int count = 0;
@@ -174,7 +186,7 @@ int Grid::countAliveNeighbors(int x, int y) const {
     return count;
 }
 
-
+// Expands the grid by one row/column on any side if live cells are on the edge
 void Grid::resizeIfNeeded() {
     // TOP row (y=0)
     for (int x = 0; x < width; x++) {

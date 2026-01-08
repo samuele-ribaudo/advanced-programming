@@ -139,27 +139,28 @@
 
 ```+ void runMainLoop()```  _main application loop, repeats configuration and simulation until user exits_
 
-```+ void configureFromUser()```  _asks the user how to initialize the grid and how many steps to simulate_
+```- void configureFromUser()```  _asks the user how to initialize the grid and how many steps to simulate_
 
-```+ void showMenu()```  _prints the main menu (random grid or load from file)_
+```- void showMenu()```  _prints the main menu (random grid or load from file)_
 
-```+ bool askLoadFromFile()```  _asks whether to load the grid from a file or create it randomly_
+```- bool askLoadFromFile()```  _asks whether to load the grid from a file or create it randomly_
 
-```+ std::string askFilePath()```  _reads the input filename (typically relative to the input folder)_
+```- std::string askFilePath()```  _reads the input filename (typically relative to the input folder)_
 
-```+ void askRandomGridParams(int& w, int& h, int& p)```  _reads width, height and live‑cell probability for random initialization_
+```- void askRandomGridParams(int& w, int& h, int& p)```  _reads width, height and live‑cell probability for random initialization_
 
-```+ void askStepsAndDelay(int& steps, int& delayMs)```  _reads number of steps and delay in milliseconds_
+```- void askStepsAndDelay(int& steps, int& delayMs)```  _reads number of steps and delay in milliseconds_
 
-```+ bool askSaveFinal()```  _asks the user whether to save the final grid state_
+```- bool askSaveFinal()```  _asks the user whether to save the final grid state_
 
-```+ std::string askOutputFilePath()```  _reads the output filename (typically in the output folder)_
+```- std::string askOutputFilePath()```  _reads the output filename (typically in the output folder)_
 
 ```- void initFromFile()```  _initializes the game grid from a file based on user input_
 
 ```- void initRandom()```  _initializes the game grid randomly based on user parameters_
 
 ```- void saveFinalIfRequested()```  _if requested, saves the final grid state to the chosen output file_
+
 
 
 # Build and Run (macOS or Linux)

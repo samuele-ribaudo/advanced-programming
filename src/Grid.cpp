@@ -139,6 +139,7 @@ void Grid::stepClassicRules() {
 
 void Grid::stepAlternativeRules() {
     // Too boring to implement
+    stepClassicRules();
 }
 
 void drawLine(int l){

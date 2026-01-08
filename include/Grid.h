@@ -27,8 +27,8 @@ public:
     void randomInit(int width, int height, int p = 20);
 
     // Simulation steps
-    void stepClassicRules();
-    void stepAlternativeRules();
+    void stepClassicRules(bool resize = true);
+    void stepAlternativeRules(bool resize = true);
 
     // Output
     void print() const;

@@ -95,7 +95,7 @@ bool Grid::saveToFile(const std::string& path) const {
     return true;
 }
 
-void Grid::stepClassicRules() {
+void Grid::stepClassicRules(bool resize) {
     //calculateNextState() code
 
     // Rules:
@@ -127,7 +127,7 @@ void Grid::stepClassicRules() {
     }
 
     // resize grid if needed (infinity grid)
-    resizeIfNeeded();
+    if(resize) resizeIfNeeded();
 
     //apply changes
     for(int y = 0; y < height; y++){
@@ -137,9 +137,9 @@ void Grid::stepClassicRules() {
     }
 }
 
-void Grid::stepAlternativeRules() {
+void Grid::stepAlternativeRules(bool resize) {
     // Too boring to implement
-    stepClassicRules();
+    stepClassicRules(resize);
 }
 
 void drawLine(int l){

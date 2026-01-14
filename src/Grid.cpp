@@ -145,10 +145,44 @@ void Grid::stepClassicRules(bool resize) {
     }
 }
 
-// Placeholder for alternative rules; currently calls classic rules
+// Placeholder for alternative rules;
+//  1) Any live cell with fewer than two live neighbours dies
+//  2) Any live cell with two or four live neighbours lives on to the next generation
+//  3) Any live cell with three live neighbours or more than four dies
+//  4) Any dead cell with exactly three or four live neighbours becomes a live cell
 void Grid::stepAlternativeRules(bool resize) {
     // Too boring to implement
-    stepClassicRules(resize);
+    // Determine next state for each cell
+    for(int y = 0; y < height; y++){
+        for(int x = 0; x < width; x++){
+            int aliveNeighbors = countAliveNeighbors(x, y);
+            if(cells[x][y].isAliveNow()){
+                // Any live cell with two or four live neighbours survives.
+                if(aliveNeighbors == 2 || aliveNeighbors == 4){
+                    cells[x][y].setNextState(true);
+                } else {
+                    cells[x][y].setNextState(false);
+                }
+            } else {
+                // Any dead cell with exactly three live neighbours becomes a live cell.
+                if(aliveNeighbors == 3 || aliveNeighbors == 4){
+                    cells[x][y].setNextState(true);
+                } else {
+                    cells[x][y].setNextState(false);
+                }
+            }
+        }
+    }
+
+    // resize grid if needed (infinity grid)
+    if(resize) resizeIfNeeded();
+
+    //apply changes
+    for(int y = 0; y < height; y++){
+        for(int x = 0; x < width; x++){
+            cells[x][y].applyNextState();
+        }
+    }
 }
 
 // Prints a horizontal line of length l

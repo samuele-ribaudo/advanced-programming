@@ -18,7 +18,7 @@ public:
     void setUseAlternativeRules(bool useAlt);
 
     // Simulation
-    void run(bool printEachStep = true);
+    void run(bool printEachStep, bool saveFrames = false, std::string prefix = "");
 
 private:
     Grid grid;

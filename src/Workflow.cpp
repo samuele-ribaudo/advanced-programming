@@ -20,7 +20,11 @@ void Workflow::runMainLoop() {
         game.setSteps(steps);
         game.setDelay(delayMs);
 
-        game.run(true);
+        std::string prefix;
+        bool saveFrames = askSaveFrames(prefix);
+
+        game.run(true, saveFrames, prefix);
+
         saveFinalIfRequested();
         
         char continue_choice;
@@ -68,7 +72,7 @@ std::string Workflow::askFilePath() {
     std::string filename;
     std::cout << "Enter filename (in input/): ";
     std::cin >> filename;
-    if(filename.size() < 4 || filename.substr(filename.size() - 4) != ".txt") filename += ".txt";
+    if(filename.size() < 4 || filename.substr(filename.size() - 4) != ".pbm") filename += ".pbm";
     return "../input/" + filename;
 }
 
@@ -117,7 +121,7 @@ std::string Workflow::askOutputFilePath() {
     std::string filename;
     std::cout << "Enter filename (in output/): ";
     std::cin >> filename;
-    if(filename.size() < 4 || filename.substr(filename.size() - 4) != ".txt") filename += ".txt";
+    if(filename.size() < 4 || filename.substr(filename.size() - 4) != ".pbm") filename += ".pbm";
     return "../output/" + filename;
 }
 
@@ -153,4 +157,17 @@ void Workflow::saveFinalIfRequested() {
         std::string path = askOutputFilePath();
         game.getGrid().saveToFile(path);
     }
+}
+
+// Asks the user whether to save each frame of the simulation as PBM files.
+bool Workflow::askSaveFrames(std::string& prefix) {
+    std::cout << "Do you want to save each frame as PBM? (y/n): ";
+    char ans;
+    std::cin >> ans;
+    if (ans == 'y' || ans == 'Y') {
+        std::cout << "Enter filename prefix: ";
+        std::cin >> prefix;
+        return true;
+    }
+    return false;
 }

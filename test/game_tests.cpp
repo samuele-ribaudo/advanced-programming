@@ -21,7 +21,7 @@ TEST(GridTest, RandomInitSize) {
 // =========================================================
 TEST(GridTest, LoadFromFileSize) {
     Grid grid;
-    grid.loadFromFile("../input/wikipedia_test.txt");
+    grid.loadFromFile("../input/wikipedia_test.pbm");
     EXPECT_EQ(grid.getWidth(), 80);
     EXPECT_EQ(grid.getHeight(), 20);
 }
@@ -31,7 +31,7 @@ TEST(GridTest, LoadFromFileSize) {
 // =========================================================
 TEST(GridTest, LoadFromFileContent) {
     Grid grid;
-    grid.loadFromFile("../input/wikipedia_test.txt");
+    grid.loadFromFile("../input/wikipedia_test.pbm");
     
     // Verify some known cells from wikipedia pattern
     EXPECT_TRUE(grid.at(13, 3).isAliveNow());
@@ -50,7 +50,7 @@ TEST(GridTest, LoadFromFileContent) {
 // =========================================================
 TEST(GridTest, LoadFromFileNonExistent) {
     Grid grid;
-    EXPECT_FALSE(grid.loadFromFile("../input/non_existent_file.txt"));
+    EXPECT_FALSE(grid.loadFromFile("../input/non_existent_file.pbm"));
 }
 
 // =========================================================
@@ -97,9 +97,9 @@ TEST(GridTest, StepClassicRulesEdgeCells) {
 // =========================================================
 TEST(GridTest, StepClassicRulesBlinker) {
     Grid grid;
-    grid.loadFromFile("../input/next_state_test.txt");
+    grid.loadFromFile("../input/next_state_test.pbm");
     Grid expected;
-    expected.loadFromFile("../input/next_state_test_expected.txt");
+    expected.loadFromFile("../input/next_state_test_expected.pbm");
     
     grid.stepClassicRules(false);
     
@@ -145,7 +145,7 @@ TEST(GridTest, InfinityGridResizing) {
 // =========================================================
 TEST(GameTest, RunSimulationBlinker) {
     Grid initial;
-    initial.loadFromFile("../input/next_state_test.txt");
+    initial.loadFromFile("../input/next_state_test.pbm");
     Game game(initial);
     game.setSteps(2);  // 2 steps return to original pattern
     game.setDelay(0);
@@ -167,7 +167,7 @@ TEST(GameTest, RunSimulationBlinker) {
 // =========================================================
 TEST(GameTest, RunSimulationWikipedia) {
     Grid initial;
-    initial.loadFromFile("../input/wikipedia_test.txt");
+    initial.loadFromFile("../input/wikipedia_test.pbm");
     Game game(initial);
     game.setSteps(30);  // number of steps to return to initial state
     game.setDelay(0);

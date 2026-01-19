@@ -161,13 +161,16 @@ void Workflow::saveFinalIfRequested() {
 
 // Asks the user whether to save each frame of the simulation as PBM files.
 bool Workflow::askSaveFrames(std::string& prefix) {
-    std::cout << "Do you want to save each frame as PBM? (y/n): ";
-    char ans;
-    std::cin >> ans;
-    if (ans == 'y' || ans == 'Y') {
-        std::cout << "Enter filename prefix: ";
-        std::cin >> prefix;
-        return true;
+    while(true){
+        std::cout << "Do you want to save each frame as PBM? (Y/N): ";
+        char ans;
+        std::cin >> ans;
+        if (ans == 'y' || ans == 'Y') {
+            std::cout << "Enter filename prefix: ";
+            std::cin >> prefix;
+            return true;
+        } else if (ans == 'n' || ans == 'N') {
+            return false;
+        }
     }
-    return false;
 }

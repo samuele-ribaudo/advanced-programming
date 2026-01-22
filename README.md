@@ -32,6 +32,50 @@
 │    └── game_tests.cpp
 └── external
 ```
+# Build and Run (macOS or Linux)
+
+To build and run the project on macOS or Linux, please follow these steps in your terminal:
+
+1. Clone the repository (if you haven't already):
+```
+git clone <repository-url>
+cd <repository-directory>
+```
+
+2. Initialize and update the Google Test submodule:
+```
+git submodule update --init --recursive
+```
+
+3. Create a build directory:
+```
+mkdir build
+```
+
+4. Navigate into build directory:
+```
+cd build
+```
+
+5. Generate the build files using CMake:
+```
+cmake ..
+```
+
+6. Build the project:
+```
+cmake --build .
+```
+
+7. Run the main program:
+```
+./GameOfLife
+```
+
+8. To run the game_tests:
+```
+./game_tests
+```
 
 
 # Complete UML design
@@ -160,52 +204,3 @@
 ```- void initRandom()```  _initializes the game grid randomly based on user parameters_
 
 ```- void saveFinalIfRequested()```  _if requested, saves the final grid state to the chosen output file_
-
-
-
-# Build and Run (macOS or Linux)
-
-To build and run the project on macOS or Linux, please follow these steps in your terminal:
-
-1. Clone the repository (if you haven't already):
-```
-git clone <repository-url>
-cd <repository-directory>
-```
-
-2. Initialize and update the Google Test submodule:
-```
-git submodule update --init --recursive
-```
-
-3. Create a build directory:
-```
-mkdir build
-```
-
-4. Navigate into build directory:
-```
-cd build
-```
-
-5. Generate the build files using CMake:
-```
-cmake ..
-```
-
-6. Build the project:
-```
-cmake --build .
-```
-
-7. Run the main program (replace `GameOfLife` with the actual executable name if different):
-```
-./GameOfLife
-```
-
-8. To run the game_tests (assuming the tests executable is named `game_tests`):
-```
-./game_tests
-```
-
-These instructions assume the project is configured to include Google Test as a submodule and that CMakeLists.txt is properly set up to build both the main application and the tests.

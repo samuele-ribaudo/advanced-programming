@@ -76,19 +76,31 @@ std::string Workflow::askFilePath() {
     return "../input/" + filename;
 }
 
+// Helper function to ensure a positive integer input.
+int checkPositive(int val) {
+    while (val < 0) {
+        std::cout << "Please enter a positive integer: ";
+        std::cin >> val;
+    }
+    return val;
+}
 
 // Asks the user for parameters to initialize a random grid.
 // parameters:
 // - w Reference to grid width.
 // - h Reference to grid height.
 // - p Reference to live cell probability (0-100).
+
 void Workflow::askRandomGridParams(int& w, int& h, int& p) {
     std::cout << "Enter grid size X (ex. 80): ";
     std::cin >> w;
+    w = checkPositive(w);
     std::cout << "Enter grid size Y (ex. 20): ";
     std::cin >> h;
+    h = checkPositive(h);
     std::cout << "Enter live cell probability (0-100): ";
     std::cin >> p;
+    p = checkPositive(p);
 }
 
 
@@ -99,8 +111,10 @@ void Workflow::askRandomGridParams(int& w, int& h, int& p) {
 void Workflow::askStepsAndDelay(int& steps, int& delayMs) {
     std::cout << "Enter number of time steps (ex. 30): ";
     std::cin >> steps;
+    steps = checkPositive(steps);
     std::cout << "Enter delay between steps (ms, ex. 100): ";
     std::cin >> delayMs;
+    delayMs = checkPositive(delayMs);
 }
 
 

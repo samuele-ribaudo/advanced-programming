@@ -36,15 +36,24 @@ void Game::setUseAlternativeRules(bool useAlt) { useAltRules = useAlt; }
 
 // Runs the game for the specified number of steps
 // Parameters: printEachStep - if true, prints the grid at each step
-void Game::run(bool printEachStep) {
+//             saveFrames - if true, saves each frame to a PBM file
+//             prefix - prefix for saved frame filenames
+void Game::run(bool printEachStep, bool saveFrames, std::string prefix) {
     for (int step = 0; step <= stepsNumber; step++) {
         if (printEachStep) {
             system("clear");
             grid.print();
             std::cout << "Iteration: " << step << " / " << stepsNumber << std::endl;
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(delayMs));
+
+        if (saveFrames) {
+            std::string filename = "../output/" + prefix + "_" + std::to_string(step) + ".pbm";
+            grid.saveToFile(filename);
+        }
+
         if (step == stepsNumber) break;
+        
+        std::this_thread::sleep_for(std::chrono::milliseconds(delayMs));
         stepOnce();
     }
 }

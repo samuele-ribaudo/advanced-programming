@@ -20,7 +20,11 @@ void Workflow::runMainLoop() {
         game.setSteps(steps);
         game.setDelay(delayMs);
 
-        game.run(true);
+        std::string prefix;
+        bool saveFrames = askSaveFrames(prefix);
+
+        game.run(true, saveFrames, prefix);
+
         saveFinalIfRequested();
         
         char continue_choice;
@@ -68,23 +72,35 @@ std::string Workflow::askFilePath() {
     std::string filename;
     std::cout << "Enter filename (in input/): ";
     std::cin >> filename;
-    if(filename.size() < 4 || filename.substr(filename.size() - 4) != ".txt") filename += ".txt";
+    if(filename.size() < 4 || filename.substr(filename.size() - 4) != ".pbm") filename += ".pbm";
     return "../input/" + filename;
 }
 
+// Helper function to ensure a positive integer input.
+int checkPositive(int val) {
+    while (val < 0) {
+        std::cout << "Please enter a positive integer: ";
+        std::cin >> val;
+    }
+    return val;
+}
 
 // Asks the user for parameters to initialize a random grid.
 // parameters:
 // - w Reference to grid width.
 // - h Reference to grid height.
 // - p Reference to live cell probability (0-100).
+
 void Workflow::askRandomGridParams(int& w, int& h, int& p) {
     std::cout << "Enter grid size X (ex. 80): ";
     std::cin >> w;
+    w = checkPositive(w);
     std::cout << "Enter grid size Y (ex. 20): ";
     std::cin >> h;
+    h = checkPositive(h);
     std::cout << "Enter live cell probability (0-100): ";
     std::cin >> p;
+    p = checkPositive(p);
 }
 
 
@@ -95,8 +111,10 @@ void Workflow::askRandomGridParams(int& w, int& h, int& p) {
 void Workflow::askStepsAndDelay(int& steps, int& delayMs) {
     std::cout << "Enter number of time steps (ex. 30): ";
     std::cin >> steps;
+    steps = checkPositive(steps);
     std::cout << "Enter delay between steps (ms, ex. 100): ";
     std::cin >> delayMs;
+    delayMs = checkPositive(delayMs);
 }
 
 
@@ -117,7 +135,7 @@ std::string Workflow::askOutputFilePath() {
     std::string filename;
     std::cout << "Enter filename (in output/): ";
     std::cin >> filename;
-    if(filename.size() < 4 || filename.substr(filename.size() - 4) != ".txt") filename += ".txt";
+    if(filename.size() < 4 || filename.substr(filename.size() - 4) != ".pbm") filename += ".pbm";
     return "../output/" + filename;
 }
 
@@ -152,5 +170,21 @@ void Workflow::saveFinalIfRequested() {
     if (askSaveFinal()) {
         std::string path = askOutputFilePath();
         game.getGrid().saveToFile(path);
+    }
+}
+
+// Asks the user whether to save each frame of the simulation as PBM files.
+bool Workflow::askSaveFrames(std::string& prefix) {
+    while(true){
+        std::cout << "Do you want to save each frame as PBM? (Y/N): ";
+        char ans;
+        std::cin >> ans;
+        if (ans == 'y' || ans == 'Y') {
+            std::cout << "Enter filename prefix: ";
+            std::cin >> prefix;
+            return true;
+        } else if (ans == 'n' || ans == 'N') {
+            return false;
+        }
     }
 }

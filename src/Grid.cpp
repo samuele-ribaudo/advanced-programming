@@ -56,7 +56,8 @@ bool Grid::loadFromFile(const std::string& path) {
 
 // Randomly initializes a grid of width w, height h, with probability p (0-100) of cells being alive
 void Grid::randomInit(int w, int h, int p) {
-    //initializeGridRandom() code
+    srand (time(NULL));
+    
     width = w;
     height = h;
 

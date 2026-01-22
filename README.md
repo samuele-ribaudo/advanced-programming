@@ -21,7 +21,7 @@
 │   ├── Cell.h
 │   └── ...
 ├── input
-│   ├── spaceship_test.txt
+│   ├── spaceship_test.pbm
 │   └── ...
 ├── output
 ├── src

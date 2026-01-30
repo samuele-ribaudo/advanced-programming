@@ -25,42 +25,39 @@ const Cell& Grid::at(int x, int y) const { return cells[x][y]; }
 // Checks if coordinates (x, y) are inside the grid boundaries
 bool Grid::isInside(int x, int y) const { return x >= 0 && x < width && y >= 0 && y < height; }
 
-// Loads grid size and cell states from a text file at 'path'
+// Loads grid size and cell states from a PBM file at 'path'
 // Returns true if successful, false otherwise
 bool Grid::loadFromFile(const std::string& path) {
-    // initializeGridFromFile() code
-    std::ifstream patternFile(path);
-    while(!patternFile.is_open() || !patternFile.good()){
-        return false;
+    std::ifstream file(path);
+    if (!file.is_open()) return false;
+
+    std::string magic;
+    file >> magic;
+    
+    // Strict PBM check
+    if (magic != "P1") {
+        return false; 
     }
+    
+    file >> width >> height;
+    cells.assign(width, std::deque<Cell>(height)); // Resize & Clear
 
-    std::string sizeStr;
-    patternFile >> sizeStr;
-    width = std::stoi(sizeStr);
-    patternFile >> sizeStr;
-    height = std::stoi(sizeStr);
-
-    cells.resize(width, std::deque<Cell>(height));
-
-    for(int y = 0; y < height; y++){
-        for(int x = 0; x < width; x++){
-            char c;
-            do{
-                c = patternFile.get();
-            }while(std::isspace(static_cast<unsigned char>(c)) && patternFile.good());
-
-            cells[x][y].setAlive(c == '1');
+    int val;
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            file >> val;
+            cells[x][y].setAlive(val == 1);
             cells[x][y].resetNextState();
         }
     }
-    patternFile.close();
     return true;
 }
 
 
 // Randomly initializes a grid of width w, height h, with probability p (0-100) of cells being alive
 void Grid::randomInit(int w, int h, int p) {
-    //initializeGridRandom() code
+    srand (time(NULL));
+    
     width = w;
     height = h;
 
@@ -80,27 +77,24 @@ void Grid::randomInit(int w, int h, int p) {
 
 // Saves the current grid state to a text file at 'path'. Returns true if successful
 bool Grid::saveToFile(const std::string& path) const {
-    //saveFinalGrid() code
     std::string filename = path;
-    if(filename.find(".txt") == std::string::npos) filename += ".txt";
 
-    std::ofstream outFile (filename);
-    if(!outFile.is_open()){
-        std::cout << "Error saving file!" << std::endl;
-        return false;
-    }
+    if (filename.find(".pbm") == std::string::npos) filename += ".pbm";
 
-    outFile << width << std::endl << height << std::endl;
-    for(int y = 0; y < height; y++){
-        for(int x = 0; x < width; x++){
-            if(cells[x][y].isAliveNow()) outFile << "1";
-            else outFile << "0";
+    std::ofstream file(filename);
+    if (!file.is_open()) return false;
+
+    file << "P1\n" << width << " " << height << "\n";
+
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            file << (cells[x][y].isAliveNow() ? "1 " : "0 ");
         }
-        outFile << std::endl;
+        file << "\n";
     }
-    outFile.close();
     return true;
 }
+
 
 // Applies the classic Game of Life rules to each cell
 // 'resize' indicates whether the grid should expand if alive cells reach boundaries

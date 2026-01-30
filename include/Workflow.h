@@ -22,4 +22,6 @@ private:
     void initFromFile();
     void initRandom();
     void saveFinalIfRequested();
+
+    bool askSaveFrames(std::string& prefix);
 };
